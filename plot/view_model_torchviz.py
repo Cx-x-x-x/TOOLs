@@ -5,6 +5,11 @@ import tensorwatch as tw
 from arl_basic import ARL, BasicBlock
 from resnet import resnet18
 
+"""
+    使用 torchviz 可视化网络结构
+    显示效果比 tensorboard 繁琐，且为静态pdf，不能展开
+"""
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # model = ARL(BasicBlock, [2, 2, 2, 2]).to(device)
