@@ -1,6 +1,6 @@
 import torch
 from torchvision import transforms
-from myfolder import myImageFolder
+from chaos.myfolder import myImageFolder
 from torch.utils.data import DataLoader
 
 """

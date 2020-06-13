@@ -2,7 +2,7 @@ import torch
 import torchvision
 from torch import nn
 from torchvision import transforms
-from myfolder import myImageFolder
+from chaos.myfolder import myImageFolder
 from torch.utils.data import DataLoader
 import numpy as np
 import sklearn.metrics
