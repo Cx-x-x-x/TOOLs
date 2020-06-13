@@ -10,6 +10,7 @@ from cx_model.alexnet import alexnet
     该脚本是进行测试而已，实际需在所用的网络脚本中更改
 """
 
+
 class mynet(nn.Module):
 
     def __init__(self, model, pretrained):
