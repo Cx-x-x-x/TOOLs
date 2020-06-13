@@ -1,7 +1,8 @@
 import os
 
 '''
-    为数据集生成对应的txt文件
+    在数据储存方式为，子文件夹对应类别时，
+    为数据集生成对应的txt文件，包含：数据路径 + 标签
 '''
 
 # train_txt_path = os.path.join("..", "..", "Data", "train.txt")
