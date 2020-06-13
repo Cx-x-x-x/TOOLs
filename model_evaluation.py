@@ -2,19 +2,21 @@ import torch
 import torchvision
 from torch import nn
 from torchvision import transforms
-from torchvision.datasets import ImageFolder
 from myfolder import myImageFolder
 from torch.utils.data import DataLoader
 import numpy as np
 import sklearn.metrics
 
-from cx_model.alexnet import alexnet
-from cx_model.vgg import vgg16
-from cx_model.resnet import resnet50
-from arl_0 import ARL, BasicBlock, Block
-
+"""
+    使用 model.eval() 模式对验证集进行测试
+    生成 labels list 和 predicteds list
+    使用 sklearn 自动统计各个类别的各种指标: precision, recall, accuracy, f1 score
+    
+    注意：
+        这里使用的是 myImageFolder 而不是 ImageFolder
+        改成 ImageFolder 也无妨，但是 test 中读取数据要改一下
+"""
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 
 test_transform = transforms.Compose([transforms.Resize((224, 224)),
                                      transforms.ToTensor(),
@@ -23,24 +25,8 @@ test_dataset = myImageFolder('/Disk1/chenxin/LSID3_5_1/test0', transform=test_tr
 test_loader = DataLoader(dataset=test_dataset, batch_size=1,
                          shuffle=False, num_workers=2)
 
-""" extract img_name list"""
-# # myImageFolder的用途在这里，oneset[0]就是 __getitem__里的path
-# list_test0 = []
-# with open('/Disk1/chenxin/list_test0.txt', "w") as f:
-#     for idx, oneset in enumerate(test_dataset):
-#         f.write('%03d | %s' % (idx, oneset[0]))
-#         f.write('\n')
-
-
-# todo load the model
-# model = ARL(BasicBlock, [2, 2, 2, 2]).to(device)
-
-# model = vgg16().to(device)
-# cl_feature = model.classifier[6].in_features
-# model.classifier[6] = nn.Linear(cl_feature, 3).to(device)
-
+# load the model
 model = torchvision.models.googlenet(pretrained=False, aux_logits=False).to(device)
-# model = resnet50().to(device)
 fc_feature = model.fc.in_features
 model.fc = nn.Linear(fc_feature, 3).to(device)
 
@@ -60,8 +46,10 @@ with open('/Disk1/chenxin/googlenet_result_details.txt', 'w') as fw:  # todo
         _, predicted = torch.max(output.data, 1)
         predicted_copy = predicted.data.cpu().numpy()
         label_copy = label.data.cpu().numpy()
-        labels = np.append(labels, label_copy)
-        predicteds = np.append(predicteds, predicted_copy)
+        labels = np.append(labels, label_copy)  # labels list
+        predicteds = np.append(predicteds, predicted_copy)  # predicteds list
+
+        # 获取 predition 和 label 的详细对照，用来手动观察哪一张图片错了，序号在 get_ImgsName_list.py 中可查
         if label != predicted:
             fw.write('%4d | %d | %d' % (i, label_copy, predicted_copy))
             fw.write('\n')
