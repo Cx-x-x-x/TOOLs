@@ -3,6 +3,12 @@ from torch import optim
 from torch import nn
 from cx_model.alexnet import alexnet
 
+"""
+    for p in self.parameters():
+        p.requires_grad = False
+    使参数梯度回传关闭，从而固定参数
+    该脚本是进行测试而已，实际需在所用的网络脚本中更改
+"""
 
 class mynet(nn.Module):
 
