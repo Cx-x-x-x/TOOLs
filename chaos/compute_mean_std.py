@@ -2,11 +2,13 @@ import torch
 import numpy as np
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
+"""
+    compute the mean and the standard deviation for data set 
+    
+    this will be used in 'transforms.Normalize'
+"""
 
-# todo "transforms mean and std"
-transform = transforms.Compose([
-    transforms.ToTensor(),
-])
+transform = transforms.Compose([transforms.ToTensor()])
 
 dataset = datasets.ImageFolder('/Disk1/chenxin/LSID3_5_1/train0', transform=transform)
 
@@ -26,12 +28,11 @@ print('dataset[0] = ', dataset[0])
 means = torch.zeros(3)
 stds = torch.zeros(3)
 
-for data in dataset: # todo note:for循环中的写法
+for data in dataset:
     img = data[0]
     for i in range(3):
         means[i] += img[i, :, :].mean()
         stds[i] += img[i, :, :].std()
-
 
 num_img = len(dataset)  # dataset is "a list of tuple" ==> len(dataset) is the # of images
 mean = np.asarray(means) / num_img
