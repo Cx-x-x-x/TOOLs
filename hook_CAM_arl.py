@@ -1,20 +1,20 @@
 import torch
-from torch import nn
-import torchvision
 from torchvision import transforms
 import numpy as np
 import cv2
-import torch.nn.functional as F
 
-import torchvision.utils as vutils
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 
-from resnet import resnet50
-from arl_0 import ARL, BasicBlock
+from cx_model.arl import ARL, BasicBlock
+
+"""
+    使用 hook，提取最后一层卷积层的特征图
+    再用 CAM 原理，提取 softmax 的权重，生成 CAM 图
+    使用 cv 库，合并原图与 CAM 图，生成最后的注意力效果图
+"""
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 
 # data
 test_transform = transforms.Compose([transforms.Resize((224, 224)),
@@ -27,12 +27,8 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False, num_
 net = ARL(BasicBlock, [2, 2, 2, 2]).to(device)
 pthfile = '/Disk1/chenxin/model/model_103/net_030.pth'
 
-# net = resnet50(pretrained=False).to(device)
-# pthfile = '/Disk1/chenxin/model/model_24/net_050.pth'
-# fc_feature = net.fc.in_features
-# net.fc = nn.Linear(fc_feature, 3).to(device)
-
 net.load_state_dict(torch.load(pthfile))
+
 
 features_blobs = []
 # hook the feature extractor
@@ -66,6 +62,7 @@ std = [0.22272113, 0.19686753, 0.19163243]
 
 net.eval()
 # extract the image in one batch
+# 如果只想提取一张，就在for后面添加一个 'if i ==1:'
 for i, data in enumerate(test_loader):
     imgs, labels = data
     imgs, labels = imgs.to(device), labels.to(device)
@@ -74,6 +71,7 @@ for i, data in enumerate(test_loader):
     net.layer4.register_forward_hook(hook_feature)  # 需要在 logit=net(imgs) 前面
     logit = net(imgs)
 
+    # 输出 predicted 的具体数值 probability？
     # h_x = F.softmax(logit, dim=1).data.squeeze()
     # probs, idx = h_x.sort(dim=0, descending=True)
     # probs = probs.cpu().numpy()
