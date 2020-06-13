@@ -7,8 +7,13 @@ from torch.utils.data import DataLoader
 from cx_model.alexnet import alexnet
 from tensorboardX import SummaryWriter
 
+"""
+    在 tensorboard 里显示alexnet中提取的 feature map 
+    通过重新定义网络的forward，只输出特定层的输出即特定层的 feature map
+    使用 make_grid 将不同通道的图合并一起显示
+"""
 
-writer = SummaryWriter('/Disk1/chenxin/runs/alexnet')  # todo log file
+writer = SummaryWriter('/Disk1/chenxin/runs/alexnet')
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -22,9 +27,9 @@ class AlexNet(nn.Module):
         out = []
         for i in range(len(self.net)):
             x = self.net[i](x)
-            if i in [10]:  # todo select the extracted layers in []
-                print(self.net[i])  # todo delete
-                out = x  # todo xiugai
+            if i in [10]:  # 选择要提取的层【10】
+                # print(self.net[i])
+                out = x
         return out
 
 
@@ -51,10 +56,9 @@ print('feature_map.shape =', feature_map.shape)
 
 # the 1st image in batch
 print('img.shape = ', imgs.shape)
-# imgs = imgs[0].detach().cpu().unsqueeze(dim=1)
 imgs = imgs[0].detach().cpu()
 print('trans_img.shape = ', imgs.shape)
-img_grid = vutils.make_grid(imgs, normalize=True)  # todo -normalization
+img_grid = vutils.make_grid(imgs, normalize=True)  # 使用 make_grid 将多张图片合并显示
 writer.add_image('original_map', img_grid)
 
 feature_map = feature_map[0].detach().cpu().unsqueeze(dim=1)  # [C, 1, H, W]
