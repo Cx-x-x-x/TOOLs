@@ -6,7 +6,6 @@ from tensorboardX import SummaryWriter
 
 import torch
 from torch import nn
-import torchvision
 from torch import optim
 
 from torchvision import transforms
@@ -14,7 +13,7 @@ from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 
 from config import device, save_dir, MODEL, pthfile, Epoch, BatchSize, Optimizer, lr, wd, SaveFreq, tensorboard_dir
-from filter_weight_decay import group_weight
+from train.filter_weight_decay import group_weight
 
 writer = SummaryWriter('/Disk1/chenxin/runs/' + tensorboard_dir)
 start = time.time()

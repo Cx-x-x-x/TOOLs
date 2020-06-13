@@ -2,7 +2,6 @@ import torch
 import os
 import argparse
 import time
-import torchvision
 
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
@@ -14,7 +13,7 @@ from torch import optim
 from arl_0 import ARL
 from config_0 import device, SaveFreq, save_dir, pthfile, block, layers, dropout, \
     Epoch, BatchSize, Optimizer, lr, wd, factor_init, tensorboard_dir
-from filter_weight_decay import group_weight
+from train.filter_weight_decay import group_weight
 
 from tensorboardX import SummaryWriter
 

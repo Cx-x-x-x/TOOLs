@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 
-# merge train_acc and test_acc
+"""
+    将多个模型的 train_acc 或 train_loss 或 test_acc 或 test_loss
+    放在同一张图里比较 
+"""
 
 # convenience
 root_dir = 'C:/Users/Administrator/Desktop/Loss Acc/'

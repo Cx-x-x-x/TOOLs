@@ -1,22 +1,14 @@
 import matplotlib.pyplot as plt
-from matplotlib import image
+
+"""
+    将所有模型的某一种曲线几种在一起，放在subplot里
+    对比哪个曲线的趋势比较好
+"""
 
 root_dir = 'C:/Users/Administrator/Desktop/Loss Acc/'
 
-# a = 1
-# for i in range(12, 27):
-#     plt.subplot(4, 4, a)
-#     i = str(i)
-#     sub_dir = i + '/acc.png'
-#     plt.title(i)
-#     plt.imshow(image.imread(root_dir + sub_dir))
-#     a += 1
-#
-# plt.show()
-
-
 a = 1
-for i in range(38, 41):  # file
+for i in range(38, 41):  # 存储的文件夹序号
     sub_dir = str(i)
     train_fn = root_dir + sub_dir + '/train_acc_loss.txt'
     train_X, train_acc, train_loss = [], [], []
